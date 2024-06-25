@@ -26,7 +26,6 @@ Version:
     1.0.1
 """
 
-import random
 import re
 
 LEAST_LENGTH = 11
