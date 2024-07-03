@@ -20,20 +20,16 @@ Author:
     Elliot Yun
 
 Date:
-    2024-06-25
+    2024-07-03
 
 Version:
-    1.0.0
+    1.0.1
 """
 
 import re
 from pathlib import Path
+from _regex_patterns import LEAST_LENGTH, UPPERCASE, LOWERCASE, NUMBER, SPECIAL
 
-LEAST_LENGTH = 11
-UPPERCASE_PATTERN = r"[A-Z]"
-LOWERCASE_PATTERN = r"[a-z]"
-NUMBER_PATTERN = r"\d"
-SPECIAL_CHAR_PATTERN = r"[!@#$%^&*]"
 
 current_path = Path(__file__).parent
 file_path = current_path / ".." / "docs" / "common_passwords.txt"
@@ -56,25 +52,37 @@ def check_length_char(password):
     """
     is_valid = True
     no_space = password.strip()
+    errors = []
 
     if len(password) != len(no_space):
-        print("Please do not put spaces in your password.")
         is_valid = False
+        errors.append("Please do not put spaces in your password.")
 
     if len(password) < LEAST_LENGTH:
-        print("Your password is under the required safe length (11).")
         is_valid = False
+        errors.append("Your password is under the required safe length (11).")
 
-    if (
-        not re.search(UPPERCASE_PATTERN, password)
-        or not re.search(LOWERCASE_PATTERN, password)
-        or not re.search(NUMBER_PATTERN, password)
-        or not re.search(SPECIAL_CHAR_PATTERN, password)
-    ):
-        print(
-            "Your password does not have enough uses of capital letters, lowercase letters, numbers, or symbols (!, @, #, $, %, ^, &, *)."
-        )
+    if not re.search(UPPERCASE, password):
         is_valid = False
+        errors.append(
+            "Your password must contain at least one capital letter.")
+
+    if not re.search(LOWERCASE, password):
+        is_valid = False
+        errors.append(
+            "Your password must contain at least one lowercase letter.")
+
+    if not re.search(NUMBER, password):
+        is_valid = False
+        errors.append(
+            "Your password must contain at least one number.")
+
+    if not re.search(SPECIAL, password):
+        is_valid = False
+        errors.append(
+            "Your password must contain at least one special character.")
+
+    # final check
 
     if is_valid:
         print("Your password meets all the requirements.")
