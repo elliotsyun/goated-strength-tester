@@ -1,10 +1,52 @@
+"""
+This module provides functions to evaluate the strength of a password based on entropy calculations and character composition.
+
+Functions:
+    find_pool(password): Determines the size of the character pool based on the types of characters in the password.
+    entropy_test(pool, password): Calculates the entropy of the password and classifies its strength.
+
+Examples:
+    To determine the character pool size of a password:
+
+    >>> pool_size = find_pool("StrongPass123!")
+    >>> print(pool_size)
+
+    To calculate the entropy of a password and classify its strength:
+
+    >>> entropy = entropy_test(pool_size, "StrongPass123!")
+    >>> print(entropy)
+
+Author:
+    Elliot Yun
+
+Date:
+    2024-07-11
+
+Version:
+    1.0.2
+"""
+
 import re
 import math
 from _regex_patterns import UPPERCASE, LOWERCASE, DIGITS, SPECIAL
 
 
 def find_pool(password):
-    # determine the length of the password
+    """
+    Determines the character pool size based on the composition of the given password.
+
+    The function analyzes the password and increments the pool size based on the presence of:
+    - Uppercase letters: 26
+    - Lowercase letters: 26
+    - Digits: 10
+    - Special characters: 32
+
+    Parameters:
+    password (str): The password to be analyzed.
+
+    Returns:
+    int: The total size of the character pool.
+    """
     pool = 0
 
     # if it contains a certain character, add specified num to pool
@@ -28,6 +70,20 @@ def find_pool(password):
 
 
 def entropy_test(pool, password):
+    """
+    Calculates the entropy of a password based on its length and character pool size.
+
+    The function computes the entropy using the formula: E = L * log_base_2(P)
+    where L is the password length and P is the size of the character pool.
+    It then classifies the password strength based on the entropy value.
+
+    Parameters:
+    pool (int): The size of the character pool.
+    password (str): The password to be evaluated.
+
+    Returns:
+    float: The calculated entropy of the password.
+    """
     length = len(password)
 
     # entropy calculation: E = L * log_base_2(P), P = size of pool, L = pass length
