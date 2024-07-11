@@ -20,22 +20,22 @@ Author:
     Elliot Yun
 
 Date:
-    2024-07-03
+    2024-07-11
 
 Version:
-    1.0.1
+    1.0.2
 """
 
 import re
 from pathlib import Path
-from _regex_patterns import LEAST_LENGTH, UPPERCASE, LOWERCASE, NUMBER, SPECIAL
+from _regex_patterns import LEAST_LENGTH, UPPERCASE, LOWERCASE, DIGITS, SPECIAL
 
 
 current_path = Path(__file__).parent
 file_path = current_path / ".." / "docs" / "common_passwords.txt"
 
 
-def check_length_char(password):
+def strength_len_char(password):
     """
     Checks the strength of a password based on its length and character composition.
 
@@ -54,43 +54,35 @@ def check_length_char(password):
     no_space = password.strip()
     errors = []
 
-    if len(password) != len(no_space):
-        is_valid = False
-        errors.append("Please do not put spaces in your password.")
+    checks = [
+        (lambda password: ' ' not in password,
+         "Please do not put spaces in your password."),
+        (lambda password: len(password) < LEAST_LENGTH,
+         "Your password is under the required safe length (11)."),
+        (lambda password: re.search(UPPERCASE, password),
+         "Your password must contain at least one capital letter.")
+        (lambda password: re.search(LOWERCASE, password),
+         "Your password must contain at least one lowercase letter.")
+        (lambda password: re.search(DIGITS, password),
+         "Your password must contain at least one number.")
+        (lambda password: re.search(SPECIAL, password),
+         "Your password must contain at least one special character.")
+    ]
 
-    if len(password) < LEAST_LENGTH:
-        is_valid = False
-        errors.append("Your password is under the required safe length (11).")
+    # store message in lambdafunc, message thats in the checks list
+    # if the lambdafunc is not true
 
-    if not re.search(UPPERCASE, password):
-        is_valid = False
-        errors.append(
-            "Your password must contain at least one capital letter.")
+    errors = [message for lambdafunc,
+              message in checks if not lambdafunc(password)]
 
-    if not re.search(LOWERCASE, password):
-        is_valid = False
-        errors.append(
-            "Your password must contain at least one lowercase letter.")
-
-    if not re.search(NUMBER, password):
-        is_valid = False
-        errors.append(
-            "Your password must contain at least one number.")
-
-    if not re.search(SPECIAL, password):
-        is_valid = False
-        errors.append(
-            "Your password must contain at least one special character.")
-
-    # final check
-
-    if is_valid:
+    if errors:
+        for error in errors:
+            print(error)
+        print("Your password does not meet all the requirements.")
+        return False
+    else:
         print("Your password meets all the requirements.")
         return True
-
-    else:
-        print("Your password does not meet all the requirements")
-        return False
 
 
 def check_comm(password):
