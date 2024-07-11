@@ -57,14 +57,14 @@ def strength_len_char(password):
     checks = [
         (lambda password: ' ' not in password,
          "Please do not put spaces in your password."),
-        (lambda password: len(password) < LEAST_LENGTH,
+        (lambda password: len(password) >= LEAST_LENGTH,
          "Your password is under the required safe length (11)."),
         (lambda password: re.search(UPPERCASE, password),
-         "Your password must contain at least one capital letter.")
+         "Your password must contain at least one capital letter."),
         (lambda password: re.search(LOWERCASE, password),
-         "Your password must contain at least one lowercase letter.")
+         "Your password must contain at least one lowercase letter."),
         (lambda password: re.search(DIGITS, password),
-         "Your password must contain at least one number.")
+         "Your password must contain at least one number."),
         (lambda password: re.search(SPECIAL, password),
          "Your password must contain at least one special character.")
     ]
