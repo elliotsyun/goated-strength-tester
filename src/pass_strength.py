@@ -20,15 +20,15 @@ Author:
     Elliot Yun
 
 Date:
-    2024-07-11
+    2024-07-12
 
 Version:
-    1.0.2
+    1.0.3
 """
 
 import re
 from pathlib import Path
-from _regex_patterns import LEAST_LENGTH, UPPERCASE, LOWERCASE, DIGITS, SPECIAL
+from src._regex_patterns import LEAST_LENGTH, UPPERCASE, LOWERCASE, DIGITS, SPECIAL
 
 
 current_path = Path(__file__).parent
