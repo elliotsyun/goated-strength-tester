@@ -1,4 +1,4 @@
-### README.md
+### Goated Strength Tester
 
 ```markdown
 # Password Strength Evaluator
