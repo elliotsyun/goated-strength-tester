@@ -48,6 +48,7 @@ def find_pool(password):
     int: The total size of the character pool.
     """
     pool = 0
+    char_types = set()
 
     # if it contains a certain character, add specified num to pool
     # lowercase: 26
@@ -55,13 +56,25 @@ def find_pool(password):
     # digits: 10
     # special: 32
 
-    if re.search(UPPERCASE, password) is not None:
+    if re.search(UPPERCASE, password):
+        char_types.add("UPPER")
+
+    if re.search(LOWERCASE, password):
+        char_types.add("LOWER")
+
+    if re.search(DIGITS, password):
+        char_types.add("DIGITS")
+
+    if re.search(SPECIAL, password):
+        char_types.add("SPECIAL")
+
+    if "UPPER" in char_types:
         pool += 26
-    if re.search(LOWERCASE, password) is not None:
+    if "LOWER" in char_types:
         pool += 26
-    if re.search(DIGITS, password) is not None:
+    if "DIGITS" in char_types:
         pool += 10
-    if re.search(SPECIAL, password) is not None:
+    if "SPECIAL" in char_types:
         pool += 32
 
     print("This is the size of the pool: ", pool)
