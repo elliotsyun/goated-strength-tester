@@ -20,7 +20,7 @@ This repository provides functions to evaluate the strength of a password based 
 Clone the repository:
 
 ```bash
-git clone https://github.com/elliotsyun/password-strength-evaluator.git
+git clone https://github.com/elliotsyun/goated-strength-tester.git
 cd password-strength-evaluator
 ```
 
