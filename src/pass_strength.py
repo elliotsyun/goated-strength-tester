@@ -50,8 +50,6 @@ def strength_len_char(password):
     Returns:
         bool: True if the password meets all the requirements, False otherwise.
     """
-    is_valid = True
-    no_space = password.strip()
     errors = []
 
     checks = [
