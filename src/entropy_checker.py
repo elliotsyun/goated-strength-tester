@@ -28,7 +28,7 @@ Version:
 
 import re
 import math
-from _regex_patterns import UPPERCASE, LOWERCASE, DIGITS, SPECIAL
+from src._regex_patterns import UPPERCASE, LOWERCASE, DIGITS, SPECIAL
 
 
 def find_pool(password):
