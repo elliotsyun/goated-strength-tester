@@ -2,7 +2,9 @@ import pytest
 from pathlib import Path
 from src.pass_strength import strength_len_char, check_comm
 
-# Mock data and constants
+# in root dir: pytest tests/test_strength.py
+
+
 common_passwords_path = Path(__file__).parent / \
     ".." / "docs" / "common_passwords.txt"
 

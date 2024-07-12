@@ -1,65 +1,53 @@
-import unittest
-import re
+import pytest
 import math
-from _regex_patterns import UPPERCASE, LOWERCASE, DIGITS, SPECIAL
-from entropy import find_pool, entropy_test
+from src.entropy_checker import find_pool, entropy_test
 
 
-class TestEntropy(unittest.TestCase):
-
-    def test_find_pool(self):
-        # Test case: all character types present
-        password = "P@ssw0rd123"
-        pool = find_pool(password)
-        self.assertEqual(
-            pool, 94, "Failed to calculate pool size for password with all character types.")
-
-        # Test case: only lowercase letters
-        password = "password"
-        pool = find_pool(password)
-        self.assertEqual(
-            pool, 26, "Failed to calculate pool size for password with only lowercase letters.")
-
-        # Test case: only uppercase letters
-        password = "PASSWORD"
-        pool = find_pool(password)
-        self.assertEqual(
-            pool, 26, "Failed to calculate pool size for password with only uppercase letters.")
-
-        # Test case: only digits
-        password = "123456"
-        pool = find_pool(password)
-        self.assertEqual(
-            pool, 10, "Failed to calculate pool size for password with only digits.")
-
-        # Test case: only special characters
-        password = "@#$%^&*"
-        pool = find_pool(password)
-        self.assertEqual(
-            pool, 32, "Failed to calculate pool size for password with only special characters.")
-
-    def test_entropy_test(self):
-        # Test case: high entropy password
-        password = "P@ssw0rd123"
-        pool = find_pool(password)
-        entropy = entropy_test(pool, password)
-        self.assertGreaterEqual(
-            entropy, 60, "Entropy for strong password should be at least 60.")
-
-        # Test case: low entropy password
-        password = "123456"
-        pool = find_pool(password)
-        entropy = entropy_test(pool, password)
-        self.assertLess(
-            entropy, 36, "Entropy for weak password should be less than 36.")
-
-        # Test case: medium entropy password
-        password = "password"
-        pool = find_pool(password)
-        entropy = entropy_test(pool, password)
-        self.assertTrue(
-            36 <= entropy < 60, "Entropy for medium password should be between 36 and 60.")
+def test_find_pool():
+    # 26 (upper) + 26 (lower) + 10 (digits) + 32 (special)
+    assert find_pool("StrongPass123!") == 94
+    assert find_pool("weakpass") == 26  # 26 (lower)
+    # 26 (upper) + 26 (lower) + 10 (digits)
+    assert find_pool("NoSpecial123") == 62
+    # 26 (upper) + 10 (digits) + 32 (special)
+    assert find_pool("NOLOWERCASE123!") == 68
+    # 26 (lower) + 10 (digits) + 32 (special)
+    assert find_pool("nouppercase123!") == 68
+    # 26 (upper) + 26 (lower) + 32 (special)
+    assert find_pool("NoNumbers!!") == 84
+    # 26 (upper) + 26 (lower) + 10 (digits) + 32 (special)
+    assert find_pool("Short1!") == 94
 
 
-if __name__ == '__main__':
-    unittest.main()
+def test_entropy_test():
+    pool_size = find_pool("StrongPass123!")
+    entropy = entropy_test(pool_size, "StrongPass123!")
+    assert math.isclose(entropy, 91.76, rel_tol=1e-2)
+
+    pool_size = find_pool("weakpass")
+    entropy = entropy_test(pool_size, "weakpass")
+    assert math.isclose(entropy, 37.60, rel_tol=1e-2)
+
+    pool_size = find_pool("NoSpecial123")
+    entropy = entropy_test(pool_size, "NoSpecial123")
+    assert math.isclose(entropy, 71.45, rel_tol=1e-2)
+
+    pool_size = find_pool("NOLOWERCASE123!")
+    entropy = entropy_test(pool_size, "NOLOWERCASE123!")
+    assert math.isclose(entropy, 91.31, rel_tol=1e-2)
+
+    pool_size = find_pool("nouppercase123!")
+    entropy = entropy_test(pool_size, "nouppercase123!")
+    assert math.isclose(entropy, 91.31, rel_tol=1e-2)
+
+    pool_size = find_pool("NoNumbers!!")
+    entropy = entropy_test(pool_size, "NoNumbers!!")
+    assert math.isclose(entropy, 70.32, rel_tol=1e-2)  # Corrected expectation
+
+    pool_size = find_pool("Short1!")
+    entropy = entropy_test(pool_size, "Short1!")
+    assert math.isclose(entropy, 45.88, rel_tol=1e-2)  # Corrected expectation
+
+
+if __name__ == "__main__":
+    pytest.main()
